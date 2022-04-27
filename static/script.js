@@ -37,7 +37,7 @@ function normaltrip(){
     $("#body-from").append(appendHtml)
     $('.step0').remove()
     $('.step2').remove()
-     $('.step3').remove()
+    $('.step3').remove()
   }
   
   function arrival(){
