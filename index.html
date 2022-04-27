@@ -15,7 +15,10 @@
   <form action="./data" class="form" id="body-fromx">
     <h1 class="text-center">Job Request</h1>
     <div id="body-from">
-      
+      <div class="input-group1">
+        <label class="txt2" for="email">Email <span class="red">*</span></label>
+        <input type="text" name="email" id="email"  required/>
+      </div>
         <div class="input-group1">
           <label class="txt2" for="Name">Name <span class="red">*</span></label>
           <input type="text" name="name" id="name"  required/>
@@ -24,20 +27,7 @@
           <label class="txt2" for="billing-details">Billing details (Company/ Vessel Name) <span class="red">*</span></label>
           <input type="text" name="billing-details" id="billing-details" required/>
         </div>
-        <div class="input-group1">
-          <label class="txt2" for="new-job-request">New Jobs Request <span class="red">*</span></label>
-          <div class="row">
-            <div class="col-6">
-              <input type="date" name="new-job-request" id="new-job-request"  required/>
-            </div>
-            <div class="col-6">
-              <input type="time" name="job-time-request" id="job-time-request" required>
-            </div>
-          </div>
-        
-        
-          
-        </div>
+    
         <div class="input-group1">
           <label class="txt2" for="username">Job Priority</label>
           <select name="job-priority" id="job-priority">
@@ -92,8 +82,7 @@
       </div>
       <div class="input-group1">
         <label class="txt2" for="pickup-date">Pickup Date <span class="red">*</span></label>
-        <input type="time" name="pickup-date" id="pickup-date" required/>
-
+        <input type="date" name="pickup-date" id="pickup-date" required/>
       </div>
       <div class="input-group1">
         <label class="txt2" for="pickup-timing">Pickup Timing <span class="red">*</span></label>

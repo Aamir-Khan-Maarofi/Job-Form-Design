@@ -22,7 +22,14 @@ function normaltrip(){
   
   function dailytips(){
     var appendHtml=`<div class="step1">
-  
+          <div class="input-group1">
+                <label class="txt2" for="start-date">Start Date <span class="red">*</span></label>
+                <input type="date" name="start-date" id="start-date" required/>
+          </div>
+          <div class="input-group1">
+              <label class="txt2" for="end-date">End Date <span class="red">*</span></label>
+              <input type="date" name="end-date" id="end-date" required/>
+          </div>
           <div class="btns-group text-center">
             <a type="submit" value="submit" class="btn btn-next">Submit</a>
           </div>
