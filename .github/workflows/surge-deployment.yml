@@ -33,4 +33,4 @@ jobs:
         run:  npm install --global surge
         
       - name: Deploy the Application to Surge
-        run: surge ./build job-form-maarofi.surge.sh --token ${{ secrets.SURGE_TOKEN }}
+        run: surge ./ job-form-maarofi.surge.sh --token ${{ secrets.SURGE_TOKEN }}
