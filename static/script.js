@@ -31,7 +31,7 @@ function normaltrip(){
               <input type="date" name="end-date" id="end-date" required/>
           </div>
           <div class="btns-group text-center">
-            <a type="submit" value="submit" class="btn btn-next">Submit</a>
+            <button type="submit"  class="btn btn-next">Submit</button>
           </div>
         </div>`;
     $("#body-from").append(appendHtml)
@@ -74,7 +74,7 @@ function normaltrip(){
           </div>
           
           <div class="btns-group text-center">
-            <a type="submit" value="submit" class="btn btn-next">Submit</a>
+            <button type="submit"  class="btn btn-next">Submit</button>
           </div>
         </div>`;
     $("#body-from").append(appendHtml)
@@ -84,7 +84,7 @@ function normaltrip(){
   function lastSubmit(){
     var appendHtml=`<div class="step3">
           <div class="btns-group text-center">
-            <a type="submit" value="submit" class="btn btn-next">Submit</a>
+            <button type="submit"  class="btn btn-next">Submit</button>
           </div>
         </div>`;
     $("#body-from").append(appendHtml)
@@ -110,7 +110,7 @@ function normaltrip(){
        
       });
   
-      $('#daily-tips').click(function () {
+      $('#daily-trips').click(function () {
         if (flag2) {
           if ($(this).is(':checked')) {
           dailytips()
