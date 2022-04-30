@@ -17,7 +17,7 @@ function normaltrip(){
     $("#body-from").append(appendHtml)
     $('.step1').remove()
     $('.step2').remove()
-     $('.step3').remove()
+    $('.step3').remove()
   }
   
   function dailytips(){
@@ -50,13 +50,13 @@ function normaltrip(){
               <div class="row">
                 <div class="col-12">
                   <div class="form-check pl-01">
-                    <input class="form-check-input" type="radio" name="Meet & Greet" id="meet-and-greet-yes"/>
+                    <input class="form-check-input" type="radio" name="Meet & Greet" value="Yes" id="meet-and-greet-yes"/>
                     <p-label class="form-check-label" for="meet-and-greet-yes">Yes</p-label>
                   </div>
                   
                   
                   <div class="form-check pl-01">
-                    <input class="form-check-input" type="radio" name="Meet & Greet" id="meet-and-greet-no"/>
+                    <input class="form-check-input" type="radio" name="Meet & Greet" value="No" id="meet-and-greet-no"/>
                     <p-label class="form-check-label" for="meet-and-greet-no"> No</p-label>
                   </div>
                 </div>
