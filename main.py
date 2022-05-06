@@ -8,6 +8,13 @@ app = Flask(__name__)
 
 DB_NAME = app.root_path + "/jobs.db"
 
+# NOTE: Complete this method to get one job from database based on id
+def get_job(id, type):
+    cursor = sqlite3.connect(DB_NAME)
+    table = "DAILY_JOBS" if type == "daily-trips" else "NORMAL_JOBS"
+    result = cursor.execute("SELECT * FROM {} WHERE ID IS {}".format(table, int(id)))
+   
+    return result.fetchone()
 
 def get_company_jobs(company):
     cursor = sqlite3.connect(DB_NAME)
@@ -34,8 +41,7 @@ def get_company_jobs(company):
 def index():
     return render_template('index.html')
 
-
-@app.route('/jobs/create', methods=['POST'])
+@app.route('/job/create', methods=["GET", "POST"])
 def create_new_job():
     # try:
     if request.method == "POST":
@@ -97,13 +103,15 @@ def create_new_job():
         company = currentJob[1]
         companyJobs = get_company_jobs(company)
         return render_template('list_jobs.html', jobs=companyJobs, title=company + " Jobs", company=company)
+    elif request.method == "GET": 
+        return render_template('job_form.html')
 
     # except Error as e:
     #     print(e)
     #     return "ERROR"
 
-@app.route('/jobs/list')
-@app.route('/jobs/list/<company>')
+@app.route('/job/list')
+@app.route('/job/list/<company>')
 def list_jobs_for_company(company=None):
     # search database for
     jobs = get_company_jobs(company)
@@ -116,6 +124,20 @@ def list_jobs_for_company(company=None):
         company = "Please Enter Your Company Name"
     return render_template("list_jobs.html", jobs=jobs, title=title, company = company)
 
+@app.route('/job/edit', methods=["POST"])
+def update_a_job():
+    if request.method == "POST":
+        data = request.get_json()
+        job = get_job(data['id'], data['type'])
+        print(job)
+        return render_template("job_form.html", job=job)
+
+    return {"message" : "Invalid call method for this endpoint", "status" : 404}
+
+@app.route('/job/delete', methods=["POST"])
+def delete_a_job():
+    return "Job Deleted"
+
 
 if __name__ == "__main__":
-    app.run("localhost", port=5000)
+    app.run("localhost", port=8080)

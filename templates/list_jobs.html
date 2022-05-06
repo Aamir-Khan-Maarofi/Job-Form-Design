@@ -41,12 +41,6 @@
 
         <div class="row">
 
-            <!-- ["id", "created_at", "company", "name", "billing_details", "job_priority", "type_of_trip", "client_details",
-    "pickup_date", "pickup_time", "return_time", "destination_details", "notes", "start_date", "end_date"]
-
-    ["id", "created_at", "company", "name", "billing_details", "job_priority", "type_of_trip", "client_details",
-    "pickup_date", "pickup_time", "return_time", "destination_details", "notes", "job_type", "meet_greet",
-    "flight_details", "special_requirements"] -->
 
             {% for job in jobs %}
             <div class="col-md-3">
@@ -85,13 +79,24 @@
 <script>
     function search(){
         let company = $('#serach-from-company').val();
-        window.location = "http://localhost:8080/jobs/list/" + company;
+        window.location = "http://localhost:8080/job/list/" + company;
     }
 
     function updateJob(id) {
         console.log("Updated: ID -> ", id);
         let type = $(`#card-${id}-type`).val();
-        console.log(`Type:  ${type}`)
+        console.log(`Type:  ${type}`);
+        data = {
+            "id"    : id,
+            "type"  : type 
+        }
+        $.ajax({
+            type: "POST", 
+            url: "http://localhost:8080/job/edit",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json'
+        });
     }
 
     function deleteJob(id) {
