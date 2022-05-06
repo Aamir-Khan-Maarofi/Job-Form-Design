@@ -23,12 +23,12 @@
 <script>
     function createNewJob(){
         console.log("Request for new job creation, route to form")
-        window.location = "http://localhost:8080/job/create";
+        window.location = window.location.origin + "/job/create";
     }
 
     function listCompanyJobs(){
         console.log("Request for all company jobs, route to list jobs page")
-        window.location = "http://localhost:8080/job/list"
+        window.location = window.location.origin + "/job/list"
     }   
 </script>
 </html>

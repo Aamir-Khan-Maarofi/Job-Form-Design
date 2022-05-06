@@ -79,7 +79,7 @@
 <script>
     function search(){
         let company = $('#serach-from-company').val();
-        window.location = "http://localhost:8080/job/list/" + company;
+        window.location = window.location.origin +  "/job/list/" + company;
     }
 
     function updateJob(id) {
@@ -92,7 +92,7 @@
         }
         $.ajax({
             type: "POST", 
-            url: "http://localhost:8080/job/edit",
+            url: window.location.origin + "/job/edit",
             data: JSON.stringify(data),
             contentType: 'application/json',
             dataType: 'json'
