@@ -86,23 +86,18 @@
         console.log("Updated: ID -> ", id);
         let type = $(`#card-${id}-type`).val();
         console.log(`Type:  ${type}`);
-        data = {
-            "id"    : id,
-            "type"  : type 
-        }
-        $.ajax({
-            type: "POST", 
-            url: window.location.origin + "/job/edit",
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json'
-        });
+        window.location = window.location.origin + "/job/edit/" + id + "/" + type;
     }
 
     function deleteJob(id) {
         console.log("Deleted: ID -> ", id);
         let type = $(`#card-${id}-type`).val();
         console.log(`Type:  ${type}`)
+
+        // NOTE: You will resume from here...
+        $.ajax({
+         
+        });
     }
 </script>
 
