@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %} JOBS Schedule CRUD {% endblock %}
+
+{% block body %}
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Automation</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/create">Create Job</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/search-jobs">List Jobs</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="jumbotron p-1">
+        <div class="well text-center">
+            <h1>Edwin Job Scheduling Automation</h1>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

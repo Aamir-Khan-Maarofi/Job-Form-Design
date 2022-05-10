@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+{% block title %} Home {% endblock %}
 
-    <title>List Jobs</title>
-</head>
+{% block body %}
 
-<body>
     <div class="container">
         <div class="row">
             <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
@@ -75,30 +67,11 @@
     </div>
 </body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     function search(){
         let company = $('#serach-from-company').val();
-        window.location = window.location.origin +  "/job/list/" + company;
-    }
-
-    function updateJob(id) {
-        console.log("Updated: ID -> ", id);
-        let type = $(`#card-${id}-type`).val();
-        console.log(`Type:  ${type}`);
-        window.location = window.location.origin + "/job/edit/" + id + "/" + type;
-    }
-
-    function deleteJob(id) {
-        console.log("Deleted: ID -> ", id);
-        let type = $(`#card-${id}-type`).val();
-        console.log(`Type:  ${type}`)
-
-        // NOTE: You will resume from here...
-        $.ajax({
-         
-        });
+        window.location = window.location.origin +  "/" + company;
     }
 </script>
 
-</html>
+{% endblock %}

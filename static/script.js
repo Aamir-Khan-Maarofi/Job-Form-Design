@@ -1,7 +1,7 @@
 // step one
 
-function normaltrip(){
-    var appendHtml=`<div class="step0">
+function normaltrip() {
+  var appendHtml = `<div class="step0">
           <div class="input-group1">
                   <label class="txt2" for="job-type">Job Type <span class="red">*</span></label>
                   <select name="job-type" id="job_type">
@@ -14,14 +14,14 @@ function normaltrip(){
                 </div>
            
           </div>`;
-      $("#body-from").append(appendHtml)
-      $('.step1').remove()
-      $('.step2').remove()
-      $('.step3').remove()
-    }
-    
-    function dailytips(){
-      var appendHtml=`<div class="step1">
+  $("#body-from").append(appendHtml)
+  $('.step1').remove()
+  $('.step2').remove()
+  $('.step3').remove()
+}
+
+function dailytips() {
+  var appendHtml = `<div class="step1">
             <div class="input-group1">
                   <label class="txt2" for="start-date">Start Date <span class="red">*</span></label>
                   <input type="date" name="start-date" id="start-date" required/>
@@ -34,14 +34,14 @@ function normaltrip(){
               <button type="submit"  class="btn btn-next">Submit</button>
             </div>
           </div>`;
-      $("#body-from").append(appendHtml)
-      $('.step0').remove()
-      $('.step2').remove()
-      $('.step3').remove()
-    }
-    
-    function arrival(){
-      var appendHtml=`<div class="step2">
+  $("#body-from").append(appendHtml)
+  $('.step0').remove()
+  $('.step2').remove()
+  $('.step3').remove()
+}
+
+function arrival() {
+  var appendHtml = `<div class="step2">
         <div class="input-group1">
               <div class="row">
                 <div class="col-12">
@@ -77,73 +77,73 @@ function normaltrip(){
               <button type="submit"  class="btn btn-next">Submit</button>
             </div>
           </div>`;
-      $("#body-from").append(appendHtml)
-      $('.step3').remove()
-    }
-    
-    function lastSubmit(){
-      var appendHtml=`<div class="step3">
+  $("#body-from").append(appendHtml)
+  $('.step3').remove()
+}
+
+function lastSubmit() {
+  var appendHtml = `<div class="step3">
             <div class="btns-group text-center">
               <button type="submit"  class="btn btn-next">Submit</button>
             </div>
           </div>`;
-      $("#body-from").append(appendHtml)
-      $('.step2').remove()
-    
+  $("#body-from").append(appendHtml)
+  $('.step2').remove()
+
+}
+
+
+
+$(document).ready(function () {
+  var flag = true;
+  var flag2 = true;
+
+  $('#normal-trip').click(function () {
+
+    debugger
+    if (flag) {
+      if ($(this).is(':checked')) {
+        normaltrip()
+        flag = false;
+        flag2 = true
+      }
     }
-    
-    
-    
-    $(document).ready(function () {
-        var flag =true;
-        var flag2 =true;
-        $('#normal-trip').click(function () {
-      
-          debugger
-         if (flag) {
-              if ($(this).is(':checked')) {
-                normaltrip()
-                flag =false;
-                flag2=true
-              }
-          }
-         
-        });
-    
-        $('#daily-trips').click(function () {
-          if (flag2) {
-            if ($(this).is(':checked')) {
-            dailytips()
-            flag2 =false;
-            flag=true
-          }
-          }
-    
-         
-        });
-      });
-      // step one
-    
-      // step two
-      $(document).ready(function () {   
-        $('body').on('change','#job_type', function() {
-       
-          if (this.value==0){
-            $('.step2').remove()
-            $('.step3').remove()
-          }
-          if(this.value==1){
-            arrival()
-    
-          }
-          else if (this.value >= 1 || this.value >=4 ){
-            $('.step2').remove()
-            $('.step3').remove()
-            lastSubmit()
-          }
-         
-    
-        });
-    }); 
-    
-    
+
+  });
+
+  $('#daily-trips').click(function () {
+    if (flag2) {
+      if ($(this).is(':checked')) {
+        dailytips()
+        flag2 = false;
+        flag = true
+      }
+    }
+
+
+  });
+});
+// step one
+
+// step two
+$(document).ready(function () {
+  $('body').on('change', '#job_type', function () {
+
+    if (this.value == 0) {
+      $('.step2').remove()
+      $('.step3').remove()
+    }
+    if (this.value == 1) {
+      arrival()
+
+    }
+    else if (this.value >= 1 || this.value >= 4) {
+      $('.step2').remove()
+      $('.step3').remove()
+      lastSubmit()
+    }
+
+
+  });
+});
+
