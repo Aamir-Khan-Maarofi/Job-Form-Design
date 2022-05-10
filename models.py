@@ -54,7 +54,7 @@ class JobsModel(db.Model):
         logger.debug("Created new job instance...")
 
     def __repr__(self) -> str:
-        return "{}, {}, {}, {}, {}".format(self.company, self.trip_type, self.id, self.name, self.clients_details)
+        return "{}, {}, {}, {}, {}".format(self.pickup_date, self.pickup_time, self.return_time, self.name, self.clients_details)
 
 
 

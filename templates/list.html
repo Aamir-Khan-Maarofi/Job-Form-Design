@@ -41,16 +41,18 @@
                     <input id="{{ 'card-' +  job.id|string + '-type'}}" type="hidden" value={{  job.type_of_trip }}> 
 
                     <h4>{{ job.name }}</h4>
-                    <h6>{{ "Normal Trip" if job.type_of_trip == "normal-trip" else "Daily Trip" }}</h6>
+                    <h6>{{ "Normal Trip" if job.trip_type == "normal-trip" else "Daily Trip" }}</h6>
                     <hr>
-                    <p class="text-left">{{ job.job_priority }}</p>
+                    <p class="text-left">{{ job.priority }}</p>
                     <p class="text-left">{{ job.pickup_date }}</p>
                     <p class="text-left">{{ job.pickup_time }}</p>
                     {% if job.return_time %}
                     <p class="text-left">{{ job.return_time }}</p>
+                    {% else %}
+                    <p class="text-left"> No Return Time </p>
                     {% endif %}
                     
-                    {% if job.type_of_trip == "normal-trip" %}
+                    {% if job.trip_type == "normal-trip" %}
                         <p class="text-left">{{ job.job_type }}</p>
                         <p class="text-left"></p>
                     {% else %}
@@ -71,6 +73,10 @@
     function search(){
         let company = $('#serach-from-company').val();
         window.location = window.location.origin +  "/" + company;
+    }
+
+    function updateJob(id) {
+        window.location = window.location.origin + "/" + id + "/edit";
     }
 </script>
 
