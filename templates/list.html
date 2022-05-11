@@ -4,83 +4,87 @@
 
 {% block body %}
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
-                <h2 class="text-center">Search Scheduled Jobs</h2>
-                <p class="text-center">This must be the company name you schedule the job for, any miss-spelling will
-                    result in no/less jobs result</p>
-            </div>
-            <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
-                <div class="box">
-                    <!-- start  use that piece  for search  -->
-                    <div class="input-group1">
-                        <input type="text" placeholder="{{ company }}" name="serach-from-company"
-                            id="serach-from-company" required />
-                    </div>
-                    <div class="float-right">
-                        <button onclick="search();" class="btn btn-primary">Scheduled Jobs</button>
-                    </div>
-                    <!-- end  use that piece  for search  -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
+            <h2 class="text-center">Search Scheduled Jobs</h2>
+            <p class="text-center">This must be the company name you schedule the job for, any miss-spelling will
+                result in no/less jobs result</p>
+        </div>
+        <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
+            <div class="box">
+                <!-- start  use that piece  for search  -->
+                <div class="input-group1">
+                    <input type="text" placeholder="{{ company }}" name="serach-from-company" id="serach-from-company"
+                        required />
                 </div>
+                <div class="float-right">
+                    <button onclick="search();" class="btn btn-primary">Scheduled Jobs</button>
+                </div>
+                <!-- end  use that piece  for search  -->
             </div>
-
-            <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
-                <h2 class="text-center">{{ title }}</h2>
-            </div>
-
         </div>
 
-        <div class="row">
-
-
-            {% for job in jobs %}
-            <div class="col-md-3">
-                <div class="card-box text-center shadow p-3 mb-5 bg-white rounded">
-                    <input id="{{ 'card-' +  job.id|string }}" type="hidden" value={{ job.id }}>
-                    <input id="{{ 'card-' +  job.id|string + '-type'}}" type="hidden" value={{  job.type_of_trip }}> 
-
-                    <h4>{{ job.name }}</h4>
-                    <h6>{{ "Normal Trip" if job.trip_type == "normal-trip" else "Daily Trip" }}</h6>
-                    <hr>
-                    <p class="text-left">{{ job.priority }}</p>
-                    <p class="text-left">{{ job.pickup_date }}</p>
-                    <p class="text-left">{{ job.pickup_time }}</p>
-                    {% if job.return_time %}
-                    <p class="text-left">{{ job.return_time }}</p>
-                    {% else %}
-                    <p class="text-left"> No Return Time </p>
-                    {% endif %}
-                    
-                    {% if job.trip_type == "normal-trip" %}
-                        <p class="text-left">{{ job.job_type }}</p>
-                        <p class="text-left"></p>
-                    {% else %}
-                        <p class="text-left">{{ job.start_date }}</p>
-                        <p class="text-left">{{ job.end_date }}</p>
-                    {% endif %}
-                    <hr>
-                    <button onclick="updateJob('{{ job.id }}')" class="btn btn-primary">Edit</button>
-                    <button onclick="deleteJob('{{ job.id }}')" class="btn btn-danger">Delete</button>
-                </div>
-            </div>
-            {% endfor %}
+        <div class="col-sm-6 offset-sm-3 mt-4 mb-4">
+            <h2 class="text-center">{{ title }}</h2>
         </div>
+
     </div>
+
+    <div class="row">
+
+
+        {% for job in jobs %}
+        <div class="col-md-3">
+            <div class="card-box text-center shadow p-3 mb-5 bg-white rounded">
+                <input id="{{ 'card-' +  job.id|string }}" type="hidden" value={{ job.id }}>
+                <input id="{{ 'card-' +  job.id|string + '-type'}}" type="hidden" value={{ job.type_of_trip }}>
+
+                <h4>{{ job.name }}</h4>
+                <h6>{{ "Normal Trip" if job.trip_type == "normal-trip" else "Daily Trip" }}</h6>
+                <hr>
+                <p class="text-left">{{ job.priority }}</p>
+                <p class="text-left">{{ job.pickup_date }}</p>
+                <p class="text-left">{{ job.pickup_time }}</p>
+                {% if job.return_time %}
+                <p class="text-left">{{ job.return_time }}</p>
+                {% else %}
+                <p class="text-left"> No Return Time </p>
+                {% endif %}
+
+                {% if job.trip_type == "normal-trip" %}
+                <p class="text-left">{{ job.job_type }}</p>
+                <p class="text-left"></p>
+                {% else %}
+                <p class="text-left">{{ job.start_date }}</p>
+                <p class="text-left">{{ job.end_date }}</p>
+                {% endif %}
+                <hr>
+                <button onclick="updateJob('{{ job.id }}')" class="btn btn-primary">Edit</button>
+                <button onclick="deleteJob('{{ job.id }}')" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 </body>
 
 <script>
-    function search(){
+    function search() {
         let company = $('#serach-from-company').val();
-        window.location = window.location.origin +  "/" + company;
+        window.location = window.location.origin + "/" + company;
     }
 
     function updateJob(id) {
-        window.location = window.location.origin + "/" + id + "/edit";
+        if (confirm('Are you sure you want to update this job?')) {
+            window.location = window.location.origin + "/" + id + "/edit";    
+        }
     }
 
     function deleteJob(id) {
-        window.location = window.location.origin 
+        if (confirm('Are you sure you want to delete this job?')) {
+            window.location = window.location.origin + "/" + id + "/delete";    
+        }
     }
 </script>
 

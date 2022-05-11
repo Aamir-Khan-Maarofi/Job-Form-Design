@@ -199,7 +199,16 @@ def update(id=None):
 @app.route('/<int:id>/delete')
 def delete(id=None):
     if id:
-        return "DELETE REQUEST FOR JOB WITH ID : {} and TYPE: {}".format(id, type)
+        try:
+            job = db.session.query(JobsModel).filter(JobsModel.id == id).first()
+            db.session.query(JobsModel).filter(JobsModel.id == id).delete()
+            db.session.commit()
+
+            return redirect('/{}'.format(job.company))
+        except: 
+            return {"message" : "Error occured during deletion of the Job", "status": 404}
+            
+    return {"message": "No Id is supplied for the job to be deleted. ", "status": 404} 
 
 
 if __name__ == "__main__":
