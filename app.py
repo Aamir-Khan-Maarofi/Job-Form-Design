@@ -1,5 +1,7 @@
 import logging as logger
 from datetime import datetime
+
+from click import edit
 from models import db, JobsModel
 from flask import Flask, current_app, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
@@ -11,8 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jobs.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-# Create object based on provided data 
-def create_job_object(current_job, job_type):
+# Create object based on provided data
+def create_job_object(current_job, job_type, flag='create'):
     data = dict()
 
     if job_type == "DAILY_JOBS":
@@ -30,10 +32,21 @@ def create_job_object(current_job, job_type):
         data['clients_details'] = current_job['client-details-etc']
         data['pickup_date'] = datetime.strptime(
             current_job['pickup-date'], "%Y-%m-%d")
-        data['pickup_time'] = datetime.strptime(
-            current_job['pickup-timing'], "%H:%M").time()
-        data['return_time'] = datetime.strptime(
-            current_job['return-timing'], "%H:%M").time()
+
+        try:
+            data['pickup_time'] = datetime.strptime(
+                current_job['pickup-timing'], "%H:%M").time()
+        except:
+            data['pickup_time'] = datetime.strptime(
+                current_job['pickup-timing'], "%H:%M:%S").time()
+
+        try:
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%H:%M").time()
+        except:
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%H:%M:%S").time()
+
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
         data['start_date'] = datetime.strptime(
@@ -44,7 +57,7 @@ def create_job_object(current_job, job_type):
         data['meet_greet'] = None
         data['flight_details'] = None
         data['special_requirements'] = None
-        
+
     if job_type == "NORMAL_JOB":
         print("[INFO]: IT'S A NORMAL TRIP")
 
@@ -56,17 +69,28 @@ def create_job_object(current_job, job_type):
         data['clients_details'] = current_job['client-details-etc']
         data['pickup_date'] = datetime.strptime(
             current_job['pickup-date'], "%Y-%m-%d")
-        data['pickup_time'] = datetime.strptime(
-            current_job['pickup-timing'], "%H:%M").time()
-        data['return_time'] = datetime.strptime(
-            current_job['return-timing'], "%H:%M").time()
+
+        try:
+            data['pickup_time'] = datetime.strptime(
+                current_job['pickup-timing'], "%H:%M").time()
+        except:
+            data['pickup_time'] = datetime.strptime(
+                current_job['pickup-timing'], "%H:%M:%S").time()
+
+        try:
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%H:%M").time()
+        except:
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%H:%M:%S").time()
+
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
         data['job_type'] = current_job['job-type']
         data['start_date'] = None
         data['end_date'] = None
 
-        if len(current_job.keys()) == 12:
+        if not "Meet & Greet" in current_job.keys():
             data['meet_greet'] = None
             data['flight_details'] = None
             data['special_requirements'] = None
@@ -103,22 +127,22 @@ def create():
     elif request.method == "POST":
         current_job = dict(request.form)
         job_type = "DAILY_JOBS" if current_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
-        
+
         data = create_job_object(current_job, job_type)
         job = JobsModel(data=data)
         db.session.add(job)
         db.session.commit()
-        
+
         if job_type == "NORMAL_JOB":
-            # create one event 
+            # create one event
             pass
         else:
             # create multiple events
             pass
-        
-        # If job is immediate send whatsapp invite. 
 
-        return "[INFO]: THERE ARE {} ENTRIES IN FORM DATA".format(len(current_job))
+        # If job is immediate send whatsapp invite.
+
+        return redirect('/{}'.format(job.company))
 
     return {"message": "The request method not found, it should only be 'GET' or 'POST' ", "status": 404}
 
@@ -129,24 +153,46 @@ def create():
 @app.route('/<string:company>/')
 def search_jobs(company=None):
     if company:
-        jobs = db.session.query(JobsModel).filter(JobsModel.company == company).all()
+        jobs = db.session.query(JobsModel).filter(
+            JobsModel.company == company).all()
         return render_template('list.html', jobs=jobs)
     else:
         return render_template('list.html')
 
 # Update Job (Retrieve Edit Form & Handle the Post request from Edit Form)
 
+
 @app.route('/<int:id>/edit', methods=['POST', 'GET'])
 def update(id=None):
     if request.method == "GET":
         job = db.session.query(JobsModel).filter(JobsModel.id == id).first()
-        print(job)
+        print(job.priority)
         return render_template('update.html', job=job)
     elif request.method == "POST":
-        return "SUBMITTED"
+        edit_job = dict(request.form)
+        job = db.session.query(JobsModel).filter(
+            JobsModel.id == edit_job['id']).first()
+        job_type = "DAILY_JOBS" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
+        print(edit_job.keys())
+
+        data = create_job_object(edit_job, job_type, 'update')
+        db.session.query(JobsModel).filter(
+            JobsModel.id == edit_job['id']).update(data)
+        db.session.commit()
+
+        if job_type == "NORMAL_JOB":
+            # update one event
+            pass
+        else:
+            # update multiple events
+            pass
+
+        # If job is immediate send whatsapp invite.
+
+        return redirect('/{}'.format(job.company))
     return {"message": "The request method not found, it should only be 'GET' or 'POST' ", "status": 404}
-    
+
 # Delete a job from a table based on job id
 
 

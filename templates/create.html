@@ -25,10 +25,10 @@
         <div class="input-group1">
             <label class="txt2" for="username">Job Priority</label>
             <select name="job-priority" id="job-priority">
-                <option value="Normal - Trips before 24 Hrs">Normal (Trips before 24 Hrs)</option>
-                <option value="Important - Trips before 12 Hrs">Important (Trips before 12 Hrs )</option>
-                <option value="Immediate - Trips before 6 Hrs">Immediate (Trips before 6 Hrs)</option>
-                <option value="Emergency - After providing  Details, please call me @ +6598624654">Emergency (After
+                <option value="Normal">Normal (Trips before 24 Hrs)</option>
+                <option value="Important">Important (Trips before 12 Hrs )</option>
+                <option value="Immediate">Immediate (Trips before 6 Hrs)</option>
+                <option value="Emergency">Emergency (After
                     providing Details, please call me @ +6598624654)</option>
             </select>
         </div>
@@ -110,4 +110,8 @@
 
 </form>
 
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
 {% endblock %}
