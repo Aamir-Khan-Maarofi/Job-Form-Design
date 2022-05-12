@@ -1,7 +1,5 @@
 import logging as logger
 from datetime import datetime
-
-from click import edit
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
