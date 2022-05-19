@@ -117,6 +117,151 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
                 'visibility': 'public',
             }
 
+            response_pickup = service.events().insert(
+                calendarId=CALENDAR_ID,
+                body=body_pickup
+            ).execute()
+
+            response_return = service.events().insert(
+                calendarId=CALENDAR_ID,
+                body=body_return
+            ).execute()
+
+            print("Created two events for the date")
+
+        print("Create NORMAL JOB Event")
+    if job_type and job_type == "DAILY_JOB":
+        # if the current job has only start time then create one event for all dates (start - end dates both inclusive) each two hours long
+        if pickup_time and not return_time:
+            start_date = start_date.split('/')
+            end_date = end_date.split("/")
+            time = pickup_time.split(":")
+            number_of_days = int(end_date[0]) - int(start_date[0]) + 1
+
+            start_date_rfc = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(time[0]) - 5,
+                int(time[1])
+            )
+            end_date_rfc = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(time[0]) - 5 + 2,
+                int(time[1])
+            )
+
+            body = {
+                'start': {
+                    'dateTime': start_date_rfc,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'end': {
+                    'dateTime': end_date_rfc,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'recurrence': [
+                    'RRULE:FREQ=DAILY;INTERVAL=1;COUNT={}'.format(number_of_days)
+                ],
+
+                'summary': 'Daily Job One Event - Two hours long  - till end date',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
+
+            response = service.events().insert(
+                calendarId=CALENDAR_ID,
+                body=body
+            ).execute()
+
+            print("Created one event for all days in range")
+
+        # If the current job has both start/return times then create two events per day for all dates (both start/end times inclusive)
+        if pickup_time and return_time:
+            start_date = start_date.split('/')
+            end_date = end_date.split("/")
+            pickup_time = pickup_time.split(":")
+            return_time = return_time.split(":")
+            number_of_days = int(end_date[0]) - int(start_date[0]) + 1
+
+            start_date_rfc_pickup = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(pickup_time[0]) - 5,
+                int(pickup_time[1])
+            )
+
+            end_date_rfc_pickup = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(pickup_time[0]) - 5 + 2,
+                int(pickup_time[1])
+            )
+
+            start_date_rfc_return = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(return_time[0]) - 5,
+                int(return_time[1])
+            )
+
+            end_date_rfc_return = convert_to_RFC_datetime(
+                int(start_date[-1]),
+                int(start_date[-2]),
+                int(start_date[-3]),
+                int(return_time[0]) - 5 + 2,
+                int(return_time[1])
+            )
+
+            body_pickup = {
+                'start': {
+                    'dateTime': start_date_rfc_pickup,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'end': {
+                    'dateTime': end_date_rfc_pickup,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'recurrence': [
+                    'RRULE:FREQ=DAILY;INTERVAL=1;COUNT={}'.format(number_of_days)
+                ],
+
+                'summary': 'Daily Job PICKUP Event - Two hours long  - till end date',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
+
+            body_return = {
+                'start': {
+                    'dateTime': start_date_rfc_return,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'end': {
+                    'dateTime': end_date_rfc_return,
+                    'timeZone': 'Asia/Karachi',
+                },
+
+                'recurrence': [
+                    'RRULE:FREQ=DAILY;INTERVAL=1;COUNT={}'.format(number_of_days)
+                ],
+
+                'summary': 'Daily Job RETURN Event - Two hours long  - till end date',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
 
             response_pickup = service.events().insert(
                 calendarId=CALENDAR_ID,
@@ -127,17 +272,7 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
                 calendarId=CALENDAR_ID,
                 body=body_return
             ).execute()
-            
-            print("Created two events for the date")
 
-        print("Create NORMAL JOB Event")
-    if job_type and job_type == "DAILY_JOB":
-        # if the current job has only start time then create one event for all dates (start - end dates both inclusive) each two hours long
-        if pickup_time and not return_time:
-            print("Created one event for all days in range")
-
-        # If the current job has both start/return times then create two events per day for all dates (both start/end times inclusive)
-        if pickup_time and return_time:
             print("Created two events per day for all days in range")
 
         print("Create Recurrent Event for mentioned dates")
@@ -156,7 +291,8 @@ def edit_events(job_type):
 
 
 if __name__ == "__main__":
-    create_event("NORMAL_JOB", start_date = "22/05/2022", pickup_time="16:00", return_time="20:00")
     # create_event("NORMAL_JOB", start_date="22/05/2022", pickup_time="22:01")
-    # create_event("DAILY_JOB", start_date = "22/05/2022", end_date="26/05/2022", pickup_time="16:00", return_time="20:00")
+    # create_event("NORMAL_JOB", start_date="22/05/2022", pickup_time="16:00", return_time="20:00")
     # create_event("DAILY_JOB", start_date = "22/05/2022", end_date="26/05/2022", pickup_time="16:00")
+    create_event("DAILY_JOB", start_date = "22/05/2022", end_date="26/05/2022", pickup_time="16:00", return_time="20:00")
+
