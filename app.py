@@ -1,5 +1,6 @@
 import logging as logger
 from datetime import datetime
+from google_calendar import create_event
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
@@ -97,7 +98,7 @@ def create_job_object(current_job, job_type, flag='create'):
             data['meet_greet'] = current_job['Meet & Greet']
             data['flight_details'] = current_job['flight-details']
             data['special_requirements'] = current_job['special-requirements']
-
+    print(data)
     return data
 
 
@@ -133,10 +134,37 @@ def create():
 
         if job_type == "NORMAL_JOB":
             # create one event
-            pass
+            if current_job['return-timing']:
+                create_event(
+                    job_type=job_type, 
+                    start_date=current_job['pickup-date'], 
+                    pickup_time=current_job['pickup-timing'],
+                    return_time=current_job['return-timing'], 
+                )
+            else: 
+                create_event(
+                    job_type=job_type, 
+                    start_date=current_job['pickup-date'], 
+                    pickup_time=current_job['pickup-timing'],
+                )
+            
         else:
             # create multiple events
-            pass
+            if current_job['return-timing']:
+                create_event(
+                    job_type=job_type, 
+                    start_date=current_job['start-date'], 
+                    end_date=current_job['end-date'],
+                    pickup_time=current_job['pickup-timing'],
+                    return_time=current_job['return-timing'], 
+                )
+            else:
+                create_event(
+                    job_type=job_type, 
+                    start_date=current_job['start-date'], 
+                    end_date=current_job['end-date'],
+                    pickup_time=current_job['pickup-timing'],
+                )
 
         # If job is immediate send whatsapp invite.
 

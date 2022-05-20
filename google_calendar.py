@@ -14,17 +14,26 @@ service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
 
 def create_event(job_type, start_date=None, end_date=None, pickup_time=None, return_time=None):
+
+    print("#######################################################################")
+    print(job_type)
+    print(start_date)
+    print(end_date)
+    print(pickup_time)
+    print(return_time)
+    print("#######################################################################")
+
     if job_type and job_type == "NORMAL_JOB":
         # If the current job has only start time then create one event for two hours starting at start time
         if pickup_time and not return_time:
-            date = start_date.split('/')
+            date = start_date.split('-')
             time = pickup_time.split(':')
             body = {
                 'start': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(time[0])-5,
                         int(time[1])
                     ),
@@ -33,9 +42,9 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
                 'end': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(time[0])-5+2,
                         int(time[1])
                     ),
@@ -55,16 +64,16 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
             print("Created one event for the date")
         # If the current job has both start/return time then create two events each 2 hours long
         if pickup_time and return_time:
-            date = start_date.split('/')
+            date = start_date.split('-')
             pickup_time = pickup_time.split(':')
             return_time = return_time.split(':')
 
             body_pickup = {
                 'start': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(pickup_time[0])-5,
                         int(pickup_time[1])
                     ),
@@ -73,9 +82,9 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
                 'end': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(pickup_time[0])-5+2,
                         int(pickup_time[1])
                     ),
@@ -91,9 +100,9 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
             body_return = {
                 'start': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(return_time[0])-5,
                         int(return_time[1])
                     ),
@@ -102,9 +111,9 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
                 'end': {
                     'dateTime': convert_to_RFC_datetime(
-                        int(date[-1]),
-                        int(date[-2]),
                         int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
                         int(return_time[0])-5+2,
                         int(return_time[1])
                     ),
@@ -133,22 +142,22 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
     if job_type and job_type == "DAILY_JOB":
         # if the current job has only start time then create one event for all dates (start - end dates both inclusive) each two hours long
         if pickup_time and not return_time:
-            start_date = start_date.split('/')
-            end_date = end_date.split("/")
+            start_date = start_date.split('-')
+            end_date = end_date.split("-")
             time = pickup_time.split(":")
-            number_of_days = int(end_date[0]) - int(start_date[0]) + 1
+            number_of_days = int(end_date[-1]) - int(start_date[-1]) + 1
 
             start_date_rfc = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(time[0]) - 5,
                 int(time[1])
             )
             end_date_rfc = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(time[0]) - 5 + 2,
                 int(time[1])
             )
@@ -183,40 +192,40 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
         # If the current job has both start/return times then create two events per day for all dates (both start/end times inclusive)
         if pickup_time and return_time:
-            start_date = start_date.split('/')
-            end_date = end_date.split("/")
+            start_date = start_date.split('-')
+            end_date = end_date.split("-")
             pickup_time = pickup_time.split(":")
             return_time = return_time.split(":")
-            number_of_days = int(end_date[0]) - int(start_date[0]) + 1
+            number_of_days = int(end_date[-1]) - int(start_date[-1]) + 1
 
             start_date_rfc_pickup = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(pickup_time[0]) - 5,
                 int(pickup_time[1])
             )
 
             end_date_rfc_pickup = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(pickup_time[0]) - 5 + 2,
                 int(pickup_time[1])
             )
 
             start_date_rfc_return = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(return_time[0]) - 5,
                 int(return_time[1])
             )
 
             end_date_rfc_return = convert_to_RFC_datetime(
-                int(start_date[-1]),
-                int(start_date[-2]),
                 int(start_date[-3]),
+                int(start_date[-2]),
+                int(start_date[-1]),
                 int(return_time[0]) - 5 + 2,
                 int(return_time[1])
             )
@@ -291,8 +300,8 @@ def edit_events(job_type):
 
 
 if __name__ == "__main__":
-    # create_event("NORMAL_JOB", start_date="22/05/2022", pickup_time="22:01")
-    # create_event("NORMAL_JOB", start_date="22/05/2022", pickup_time="16:00", return_time="20:00")
-    # create_event("DAILY_JOB", start_date = "22/05/2022", end_date="26/05/2022", pickup_time="16:00")
-    create_event("DAILY_JOB", start_date = "22/05/2022", end_date="26/05/2022", pickup_time="16:00", return_time="20:00")
-
+    # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time="22:01")
+    # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time="16:00", return_time="20:00")
+    # create_event("DAILY_JOB", start_date = "2022-05-22", end_date="2022-05-26", pickup_time="16:00")
+    # create_event("DAILY_JOB", start_date = "2022-05-22", end_date="2022-05-26", pickup_time="16:00", return_time="20:00")
+    print("CALLED AS MAIN")
