@@ -1,4 +1,3 @@
-from datetime import date
 from pprint import pprint
 from google_apis import convert_to_RFC_datetime, create_service
 
@@ -15,13 +14,13 @@ service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
 def create_event(job_type, start_date=None, end_date=None, pickup_time=None, return_time=None):
 
-    print("#######################################################################")
-    print(job_type)
-    print(start_date)
-    print(end_date)
-    print(pickup_time)
-    print(return_time)
-    print("#######################################################################")
+    # print("############################ [DEBUG] ###########################################")
+    # print(job_type)
+    # print(start_date)
+    # print(end_date)
+    # print(pickup_time)
+    # print(return_time)
+    # print("############################ [DEBUG] ###########################################")
 
     if job_type and job_type == "NORMAL_JOB":
         # If the current job has only start time then create one event for two hours starting at start time
@@ -60,7 +59,7 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
                 calendarId=CALENDAR_ID,
                 body=body
             ).execute()
-
+            pprint(response)
             print("Created one event for the date")
         # If the current job has both start/return time then create two events each 2 hours long
         if pickup_time and return_time:
@@ -288,12 +287,24 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
 
 # edit event on edit request
-def edit_events(job_type):
+def edit_events(job_type, event_ids):
     if job_type and job_type == "NORMAL_JOB":
+        if len(event_ids) == 1: 
+            event = service.events().get(calendarId=CALENDAR_ID, eventId=event_ids[0]).execute()
+            event['summary'] = 'Appointment at Somewhere'
+            updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event['id'], body=event).execute()
+            pprint(updated_event)
+            print("UPDATED...")
+        else:
+            pass
         # Get the existing event
         # Update it with new data
         print("Updated event for normal job")
     if job_type and job_type == "DAILY_JOB":
+        if len(event_ids) == 1: 
+            pass
+        else:
+            pass
         # Get the existing multidays recurrent event
         # Update it with new data
         print("Updated event for daily jobs")
@@ -304,4 +315,7 @@ if __name__ == "__main__":
     # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time="16:00", return_time="20:00")
     # create_event("DAILY_JOB", start_date = "2022-05-22", end_date="2022-05-26", pickup_time="16:00")
     # create_event("DAILY_JOB", start_date = "2022-05-22", end_date="2022-05-26", pickup_time="16:00", return_time="20:00")
+    
+    
+    edit_events("NORMAL_JOB", ['h7shkcd89eoaiecb4s9j7dkfdc'])
     print("CALLED AS MAIN")
