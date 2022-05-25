@@ -134,6 +134,9 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
                 calendarId=CALENDAR_ID,
                 body=body_return
             ).execute()
+            
+            pprint(response_pickup)
+            pprint(response_return)
 
             print("Created two events for the date")
 
@@ -287,16 +290,111 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
 
 # edit event on edit request
-def edit_events(job_type, event_ids):
+def edit_events(job_type, event_ids, start_date=None, end_date=None, pickup_time=None, return_time=None):
     if job_type and job_type == "NORMAL_JOB":
         if len(event_ids) == 1: 
+            date = start_date.split('-')
+            time = pickup_time.split(':')
+            body = {
+                'start': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(time[0])-5,
+                        int(time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'end': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(time[0])-5+2,
+                        int(time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'summary': 'Normal Job One Event - Two hours long',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
+            
             event = service.events().get(calendarId=CALENDAR_ID, eventId=event_ids[0]).execute()
-            event['summary'] = 'Appointment at Somewhere'
-            updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event['id'], body=event).execute()
+            updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event['id'], body=body).execute()
             pprint(updated_event)
             print("UPDATED...")
         else:
-            pass
+            date = start_date.split('-')
+            pickup_time = pickup_time.split(':')
+            return_time = return_time.split(':')
+
+            body_pickup = {
+                'start': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(pickup_time[0])-5,
+                        int(pickup_time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'end': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(pickup_time[0])-5+2,
+                        int(pickup_time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'summary': 'NORMAL JOB - Pickup Event',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
+
+            body_return = {
+                'start': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(return_time[0])-5,
+                        int(return_time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'end': {
+                    'dateTime': convert_to_RFC_datetime(
+                        int(date[-3]),
+                        int(date[-2]),
+                        int(date[-1]),
+                        int(return_time[0])-5+2,
+                        int(return_time[1])
+                    ),
+                    'timezone': 'Asia/PKT',
+                },
+
+                'summary': 'NORMAL Job - Return Event',
+                'description': 'This automated event was created from python script, if this works then say BOOM!',
+                'status': 'confirmed',
+                'visibility': 'public',
+            }
+
+            pickup_event = service.events().get(calendarId=CALENDAR_ID, eventId=event_ids[0]).execute()
+            return_event = service.events().get(calendarId=CALENDAR_ID, eventId=event_ids[1]).execute()
+            updated_pickup_event = service.events().update(calendarId=CALENDAR_ID, eventId=pickup_event['id'], body=body_pickup).execute()
+            updated_return_event = service.events().update(calendarId=CALENDAR_ID, eventId=return_event['id'], body=body_return).execute()
         # Get the existing event
         # Update it with new data
         print("Updated event for normal job")
@@ -309,6 +407,11 @@ def edit_events(job_type, event_ids):
         # Update it with new data
         print("Updated event for daily jobs")
 
+def delete_events(job_type, event_ids):
+    if job_type and job_type == "NORMAL_JOB":
+        print("Deleted event(s) for normal job")
+    if job_type and job_type == "DAILY_JOB":
+        print("Deleted events for daily jobs")
 
 if __name__ == "__main__":
     # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time="22:01")
@@ -317,5 +420,7 @@ if __name__ == "__main__":
     # create_event("DAILY_JOB", start_date = "2022-05-22", end_date="2022-05-26", pickup_time="16:00", return_time="20:00")
     
     
-    edit_events("NORMAL_JOB", ['h7shkcd89eoaiecb4s9j7dkfdc'])
+    # edit_events("NORMAL_JOB", ['aru4k2b5bup68kp7d5v7qi7amk'], start_date="2022-05-23", pickup_time="22:30")
+    edit_events("NORMAL_JOB", ['r7kt7nbao912pjk4jgp95trr98', '249bt9endgdsg313ikv8bjnmes'], start_date="2022-05-24", pickup_time="10:00", return_time="13:00")
+    
     print("CALLED AS MAIN")
