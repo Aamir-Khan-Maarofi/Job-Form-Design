@@ -28,6 +28,8 @@ class JobsModel(db.Model):
     meet_greet = db.Column(db.String())
     flight_details = db.Column(db.String())
     special_requirements = db.Column(db.String())
+    pickup_event_id = db.Column(db.String())
+    return_event_id = db.Column(db.String())
 
     def __init__(self, data) -> None:
 
@@ -50,7 +52,9 @@ class JobsModel(db.Model):
         self.meet_greet = data['meet_greet']
         self.flight_details = data['flight_details']
         self.special_requirements = data['special_requirements']
-
+        self.pickup_event_id = data['pickup_event_id']
+        self.return_event_id = data['return_event_id']
+        
         logger.debug("Created new job instance...")
 
     def __repr__(self) -> str:

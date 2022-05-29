@@ -1,5 +1,6 @@
 import logging as logger
 from datetime import datetime
+from pprint import pprint
 from google_calendar import create_event
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
@@ -13,15 +14,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 # Create object based on provided data
-def create_job_object(current_job, job_type, flag='create'):
+def create_job_object(current_job, job_type, event_ids, flag='create'):
     data = dict()
+    if len(event_ids) == 2:
+        data['pickup_event_id'] = event_ids['pickup_id']
+        data['return_event_id'] = event_ids['return_id']
+    else:
+        data['pickup_event_id'] = event_ids['pickup_id']
+        data['return_event_id'] = None
 
     if job_type == "DAILY_JOBS":
         print("[INFO: IT'S A DAILY TRIP]")
-
-        print(current_job['pickup-date'])
-        print(current_job['start-date'])
-        print(current_job['end-date'])
 
         data['company'] = current_job['company']
         data['name'] = current_job['name']
@@ -29,34 +32,30 @@ def create_job_object(current_job, job_type, flag='create'):
         data['priority'] = current_job['job-priority']
         data['trip_type'] = current_job['type-of-trip']
         data['clients_details'] = current_job['client-details-etc']
-        data['pickup_date'] = datetime.strptime(
-            current_job['pickup-date'], "%Y-%m-%d")
+        data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
 
-        try:
-            data['pickup_time'] = datetime.strptime(
-                current_job['pickup-timing'], "%H:%M").time()
-        except:
-            data['pickup_time'] = datetime.strptime(
-                current_job['pickup-timing'], "%H:%M:%S").time()
+        # try:
+        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M").time()
+        # except:
+        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M:%S").time()
+        
+        data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
+        data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
 
-        try:
-            data['return_time'] = datetime.strptime(
-                current_job['return-timing'], "%H:%M").time()
-        except:
-            data['return_time'] = datetime.strptime(
-                current_job['return-timing'], "%H:%M:%S").time()
+        # try:
+        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M").time()
+        # except:
+        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M:%S").time()
 
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
-        data['start_date'] = datetime.strptime(
-            current_job['start-date'], "%Y-%m-%d")
-        data['end_date'] = datetime.strptime(
-            current_job['end-date'], "%Y-%m-%d")
+        data['start_date'] = datetime.strptime(current_job['start-date'], "%Y-%m-%d")
+        data['end_date'] = datetime.strptime(current_job['end-date'], "%Y-%m-%d")
         data['job_type'] = None
         data['meet_greet'] = None
         data['flight_details'] = None
         data['special_requirements'] = None
-
+    
     if job_type == "NORMAL_JOB":
         print("[INFO]: IT'S A NORMAL TRIP")
 
@@ -66,22 +65,20 @@ def create_job_object(current_job, job_type, flag='create'):
         data['priority'] = current_job['job-priority']
         data['trip_type'] = current_job['type-of-trip']
         data['clients_details'] = current_job['client-details-etc']
-        data['pickup_date'] = datetime.strptime(
-            current_job['pickup-date'], "%Y-%m-%d")
+        data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
 
-        try:
-            data['pickup_time'] = datetime.strptime(
-                current_job['pickup-timing'], "%H:%M").time()
-        except:
-            data['pickup_time'] = datetime.strptime(
-                current_job['pickup-timing'], "%H:%M:%S").time()
+        # try:
+        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M").time()
+        # except:
+        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M:%S").time()
+        
+        data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
+        data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
 
-        try:
-            data['return_time'] = datetime.strptime(
-                current_job['return-timing'], "%H:%M").time()
-        except:
-            data['return_time'] = datetime.strptime(
-                current_job['return-timing'], "%H:%M:%S").time()
+        # try:
+        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M").time()
+        # except:
+        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M:%S").time()
 
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
@@ -98,7 +95,8 @@ def create_job_object(current_job, job_type, flag='create'):
             data['meet_greet'] = current_job['Meet & Greet']
             data['flight_details'] = current_job['flight-details']
             data['special_requirements'] = current_job['special-requirements']
-    print(data)
+    
+    pprint(data)
     return data
 
 
@@ -127,22 +125,17 @@ def create():
         current_job = dict(request.form)
         job_type = "DAILY_JOBS" if current_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
-        data = create_job_object(current_job, job_type)
-        job = JobsModel(data=data)
-        db.session.add(job)
-        db.session.commit()
-
         if job_type == "NORMAL_JOB":
             # create one event
             if current_job['return-timing']:
-                create_event(
+                event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['pickup-date'], 
                     pickup_time=current_job['pickup-timing'],
                     return_time=current_job['return-timing'], 
                 )
             else: 
-                create_event(
+                event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['pickup-date'], 
                     pickup_time=current_job['pickup-timing'],
@@ -151,7 +144,7 @@ def create():
         else:
             # create multiple events
             if current_job['return-timing']:
-                create_event(
+                event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['start-date'], 
                     end_date=current_job['end-date'],
@@ -159,12 +152,17 @@ def create():
                     return_time=current_job['return-timing'], 
                 )
             else:
-                create_event(
+                event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['start-date'], 
                     end_date=current_job['end-date'],
                     pickup_time=current_job['pickup-timing'],
                 )
+
+        data = create_job_object(current_job, job_type, event_ids)
+        job = JobsModel(data=data)
+        db.session.add(job)
+        db.session.commit()
 
         # If job is immediate send whatsapp invite.
 
