@@ -3,7 +3,7 @@ from google_apis import convert_to_RFC_datetime, create_service
 
 API_VERSION = "V3"
 API_NAME = "calendar"
-CLIENT_SECRET_FILE = "./credentials.json"
+CLIENT_SECRET_FILE = "./credentials-heroku.json"
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 CALENDAR_ID = "7u0t8lmtiuacd8bgkcihphsauo@group.calendar.google.com"
 TIMEZONE, TIMEZONE_OFFSET = 'Asia/PKT', 5
