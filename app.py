@@ -17,10 +17,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 def create_job_object(current_job, job_type, event_ids, flag='create'):
     data = dict()
     if len(event_ids) == 2:
-        data['pickup_event_id'] = event_ids['pickup_id']
-        data['return_event_id'] = event_ids['return_id']
+        data['pickup_event_id'] = event_ids['pickup_event_id']
+        data['return_event_id'] = event_ids['return_event_id']
     else:
-        data['pickup_event_id'] = event_ids['pickup_id']
+        data['pickup_event_id'] = event_ids['pickup_event_id']
         data['return_event_id'] = None
 
     if job_type == "DAILY_JOBS":
@@ -194,11 +194,8 @@ def update(id=None):
         return render_template('update.html', job=job)
     elif request.method == "POST":
         edit_job = dict(request.form)
-        job = db.session.query(JobsModel).filter(
-            JobsModel.id == edit_job['id']).first()
+        job = db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).first()
         job_type = "DAILY_JOBS" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
-
-        print(edit_job.keys())
 
         data = create_job_object(edit_job, job_type, 'update')
         db.session.query(JobsModel).filter(
