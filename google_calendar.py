@@ -274,7 +274,7 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
 
 # edit event on edit request
 def edit_events(job_type, event_ids, start_date=None, end_date=None, pickup_time=None, return_time=None):
-    delete_events(job_type=job_type, event_ids=event_ids)
+    delete_events(event_ids=event_ids)
     event_ids = create_event(job_type, start_date, end_date, pickup_time, return_time)
     return event_ids
 
@@ -330,7 +330,7 @@ def edit_events(job_type, event_ids, start_date=None, end_date=None, pickup_time
     
 
 
-def delete_events(job_type, event_ids):
+def delete_events(event_ids):
     if event_ids['return_event_id']:
         service.events().delete(calendarId=CALENDAR_ID, eventId=event_ids['pickup_event_id']).execute()
         service.events().delete(calendarId=CALENDAR_ID, eventId=event_ids['return_event_id']).execute()

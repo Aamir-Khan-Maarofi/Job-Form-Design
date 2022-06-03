@@ -1,7 +1,7 @@
 import logging as logger
 from datetime import datetime
 from pprint import pprint
-from google_calendar import create_event, edit_events, event_data
+from google_calendar import create_event, delete_events, edit_events, event_data
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
@@ -33,23 +33,28 @@ def create_job_object(current_job, job_type, event_ids, flag='create'):
         data['priority'] = current_job['job-priority']
         data['trip_type'] = current_job['type-of-trip']
         data['clients_details'] = current_job['client-details-etc']
-        data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
+        data['pickup_date'] = datetime.strptime(
+            current_job['pickup-date'], "%Y-%m-%d")
 
-        data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
+        data['pickup_time'] = datetime.strptime(
+            current_job['pickup-timing'], "%I : %M %p").time()
         if 'return-timing' in current_job.keys():
-            data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%I : %M %p").time()
         else:
             data['return_time'] = None
 
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
-        data['start_date'] = datetime.strptime(current_job['start-date'], "%Y-%m-%d")
-        data['end_date'] = datetime.strptime(current_job['end-date'], "%Y-%m-%d")
+        data['start_date'] = datetime.strptime(
+            current_job['start-date'], "%Y-%m-%d")
+        data['end_date'] = datetime.strptime(
+            current_job['end-date'], "%Y-%m-%d")
         data['job_type'] = None
         data['meet_greet'] = None
         data['flight_details'] = None
         data['special_requirements'] = None
-    
+
     if job_type == "NORMAL_JOB":
         print("[INFO]: IT'S A NORMAL TRIP")
 
@@ -59,11 +64,14 @@ def create_job_object(current_job, job_type, event_ids, flag='create'):
         data['priority'] = current_job['job-priority']
         data['trip_type'] = current_job['type-of-trip']
         data['clients_details'] = current_job['client-details-etc']
-        data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
+        data['pickup_date'] = datetime.strptime(
+            current_job['pickup-date'], "%Y-%m-%d")
 
-        data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
+        data['pickup_time'] = datetime.strptime(
+            current_job['pickup-timing'], "%I : %M %p").time()
         if 'return-timing' in current_job.keys():
-            data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
+            data['return_time'] = datetime.strptime(
+                current_job['return-timing'], "%I : %M %p").time()
         else:
             data['return_time'] = None
 
@@ -82,7 +90,7 @@ def create_job_object(current_job, job_type, event_ids, flag='create'):
             data['meet_greet'] = current_job['Meet & Greet']
             data['flight_details'] = current_job['flight-details']
             data['special_requirements'] = current_job['special-requirements']
-    
+
     pprint(data)
     return data
 
@@ -117,33 +125,33 @@ def create():
             # create one event
             if 'return-timing' in current_job.keys():
                 event_ids = create_event(
-                    job_type=job_type, 
-                    start_date=current_job['pickup-date'], 
+                    job_type=job_type,
+                    start_date=current_job['pickup-date'],
                     pickup_time=current_job['pickup-timing'],
-                    return_time=current_job['return-timing'], 
+                    return_time=current_job['return-timing'],
                 )
-            else: 
+            else:
                 event_ids = create_event(
-                    job_type=job_type, 
-                    start_date=current_job['pickup-date'], 
+                    job_type=job_type,
+                    start_date=current_job['pickup-date'],
                     pickup_time=current_job['pickup-timing'],
                 )
-            
+
         else:
             # create multiple events
             print("DAILY JOB .......................")
             if 'return-timing' in current_job.keys():
                 event_ids = create_event(
-                    job_type=job_type, 
-                    start_date=current_job['start-date'], 
+                    job_type=job_type,
+                    start_date=current_job['start-date'],
                     end_date=current_job['end-date'],
                     pickup_time=current_job['pickup-timing'],
-                    return_time=current_job['return-timing'], 
+                    return_time=current_job['return-timing'],
                 )
             else:
                 event_ids = create_event(
-                    job_type=job_type, 
-                    start_date=current_job['start-date'], 
+                    job_type=job_type,
+                    start_date=current_job['start-date'],
                     end_date=current_job['end-date'],
                     pickup_time=current_job['pickup-timing'],
                 )
@@ -183,12 +191,13 @@ def update(id=None):
         return render_template('update.html', job=job)
     elif request.method == "POST":
         edit_job = dict(request.form)
-        job = db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).first()
+        job = db.session.query(JobsModel).filter(
+            JobsModel.id == edit_job['id']).first()
         job_type = "DAILY_JOB" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
         event_ids = {
-            "pickup_event_id" : job.pickup_event_id, 
-            "return_event_id" : job.return_event_id
+            "pickup_event_id": job.pickup_event_id,
+            "return_event_id": job.return_event_id
         }
 
         if job_type == "NORMAL_JOB":
@@ -196,40 +205,42 @@ def update(id=None):
             if 'return-timing' in edit_job.keys():
                 updated_event_ids = edit_events(
                     job_type=job_type,
-                    event_ids=event_ids, 
-                    start_date=edit_job['pickup-date'], 
-                    pickup_time=edit_job['pickup-timing'],
-                    return_time=edit_job['return-timing'], 
-                )
-            else: 
-                updated_event_ids = edit_events(
-                    job_type=job_type, 
                     event_ids=event_ids,
-                    start_date=edit_job['pickup-date'], 
+                    start_date=edit_job['pickup-date'],
+                    pickup_time=edit_job['pickup-timing'],
+                    return_time=edit_job['return-timing'],
+                )
+            else:
+                updated_event_ids = edit_events(
+                    job_type=job_type,
+                    event_ids=event_ids,
+                    start_date=edit_job['pickup-date'],
                     pickup_time=edit_job['pickup-timing'],
                 )
         else:
             # update multiple events
             if 'return-timing' in edit_job.keys():
-                updated_event_ids = create_event(
-                    job_type=job_type, 
-                    event_ids=event_ids,
-                    start_date=edit_job['start-date'], 
-                    end_date=edit_job['end-date'],
-                    pickup_time=edit_job['pickup-timing'],
-                    return_time=edit_job['return-timing'], 
-                )
-            else: 
-                updated_event_ids = create_event(
+                updated_event_ids = edit_events(
                     job_type=job_type,
                     event_ids=event_ids,
-                    start_date=edit_job['start-date'], 
+                    start_date=edit_job['start-date'],
+                    end_date=edit_job['end-date'],
+                    pickup_time=edit_job['pickup-timing'],
+                    return_time=edit_job['return-timing'],
+                )
+            else:
+                updated_event_ids = edit_events(
+                    job_type=job_type,
+                    event_ids=event_ids,
+                    start_date=edit_job['start-date'],
                     end_date=edit_job['end-date'],
                     pickup_time=edit_job['pickup-timing'],
                 )
-        
-        data = create_job_object(edit_job, job_type, updated_event_ids, 'update')
-        db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
+
+        data = create_job_object(
+            edit_job, job_type, updated_event_ids, 'update')
+        db.session.query(JobsModel).filter(
+            JobsModel.id == edit_job['id']).update(data)
         db.session.commit()
 
         # If job is immediate send whatsapp invite.
@@ -244,15 +255,21 @@ def update(id=None):
 def delete(id=None):
     if id:
         try:
-            job = db.session.query(JobsModel).filter(JobsModel.id == id).first()
+            job = db.session.query(JobsModel).filter(
+                JobsModel.id == id).first()
+            event_ids = {
+                "pickup_event_id": job.pickup_event_id,
+                "return_event_id": job.return_event_id
+            }
+            delete_events(event_ids=event_ids)
             db.session.query(JobsModel).filter(JobsModel.id == id).delete()
             db.session.commit()
 
             return redirect('/{}'.format(job.company))
         except:
-            return {"message" : "Error occured during deletion of the Job", "status": 404}
-            
-    return {"message": "No Id is supplied for the job to be deleted. ", "status": 404} 
+            return {"message": "Error occured during deletion of the Job", "status": 404}
+
+    return {"message": "No Id is supplied for the job to be deleted. ", "status": 404}
 
 
 if __name__ == "__main__":
