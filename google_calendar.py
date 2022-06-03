@@ -340,7 +340,7 @@ def delete_events(job_type, event_ids):
 if __name__ == "__main__":
     # create_event("NORMAL_JOB", start_date="2022-05-24", pickup_time='01 : 30 AM')
     # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time='10 : 30 AM', return_time='10 : 30 PM')
-    create_event("DAILY_JOB", start_date = "2022-06-05", end_date='2022-06-10', pickup_time='12 : 00 PM')
+    # create_event("DAILY_JOB", start_date = "2022-06-05", end_date='2022-06-10', pickup_time='12 : 00 PM')
     # create_event("DAILY_JOB", start_date = "2022-05-04", end_date="2022-05-15", pickup_time='10 : 30 AM', return_time='10 : 30 PM')
 
     # event_ids = {

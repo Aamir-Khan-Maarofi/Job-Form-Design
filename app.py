@@ -1,7 +1,7 @@
 import logging as logger
 from datetime import datetime
 from pprint import pprint
-from google_calendar import create_event
+from google_calendar import create_event, edit_events, event_data
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
@@ -186,16 +186,51 @@ def update(id=None):
         job = db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).first()
         job_type = "DAILY_JOB" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
-        data = create_job_object(edit_job, job_type, None, 'update')
-        db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
-        db.session.commit()
+        event_ids = {
+            "pickup_event_id" : job.pickup_event_id, 
+            "return_event_id" : job.return_event_id
+        }
 
         if job_type == "NORMAL_JOB":
             # update one event
-            pass
+            if 'return-timing' in edit_job.keys():
+                updated_event_ids = edit_events(
+                    job_type=job_type,
+                    event_ids=event_ids, 
+                    start_date=edit_job['pickup-date'], 
+                    pickup_time=edit_job['pickup-timing'],
+                    return_time=edit_job['return-timing'], 
+                )
+            else: 
+                updated_event_ids = edit_events(
+                    job_type=job_type, 
+                    event_ids=event_ids,
+                    start_date=edit_job['pickup-date'], 
+                    pickup_time=edit_job['pickup-timing'],
+                )
         else:
             # update multiple events
-            pass
+            if 'return-timing' in edit_job.keys():
+                updated_event_ids = create_event(
+                    job_type=job_type, 
+                    event_ids=event_ids,
+                    start_date=edit_job['start-date'], 
+                    end_date=edit_job['end-date'],
+                    pickup_time=edit_job['pickup-timing'],
+                    return_time=edit_job['return-timing'], 
+                )
+            else: 
+                updated_event_ids = create_event(
+                    job_type=job_type,
+                    event_ids=event_ids,
+                    start_date=edit_job['start-date'], 
+                    end_date=edit_job['end-date'],
+                    pickup_time=edit_job['pickup-timing'],
+                )
+        
+        data = create_job_object(edit_job, job_type, updated_event_ids, 'update')
+        db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
+        db.session.commit()
 
         # If job is immediate send whatsapp invite.
 
@@ -214,7 +249,7 @@ def delete(id=None):
             db.session.commit()
 
             return redirect('/{}'.format(job.company))
-        except: 
+        except:
             return {"message" : "Error occured during deletion of the Job", "status": 404}
             
     return {"message": "No Id is supplied for the job to be deleted. ", "status": 404} 
