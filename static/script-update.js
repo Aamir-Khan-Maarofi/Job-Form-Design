@@ -86,8 +86,8 @@ function dailyTripsUpdate(start_date, end_date) {
 function arrivalUpdate(meetGreet, flDetails, spRequirements) {
 
     var meetAndGreetCode;
-    
-    if (meetGreet === "Yes"){
+
+    if (meetGreet === "Yes") {
         meetAndGreetCode = `
         <div class="form-check pl-01">
             <input class="form-check-input" type="radio" name="Meet & Greet" value="Yes" id="meet-and-greet-yes" checked/>
@@ -113,8 +113,8 @@ function arrivalUpdate(meetGreet, flDetails, spRequirements) {
             <p-label class="form-check-label" for="meet-and-greet-no"> No</p-label>
         </div>`
     }
-    
-    
+
+
 
     var appendHtml = `
     <div class="step2">
@@ -159,6 +159,7 @@ function lastSubmitUpdate() {
 
 }
 
+
 // step one
 $(document).ready(function () {
     var flag = true;
@@ -180,10 +181,20 @@ $(document).ready(function () {
 
 // step two
 $(document).ready(function () {
+    var data = $('#my-data').data();
+    
+    var pickup_option = {
+        now: data.pickup_time,
+        title: 'Pickup Timing Title'
+    };
+    
+    var return_option = {
+        now: data.return_time,
+        title: 'Return Timing Title'
+    };
 
     if ($('#normal-trip').is(':checked')) {
         var jobType = $('#job_type').val()
-        var data = $('#my-data').data();
 
         if (jobType == 0) {
             $('.step2').remove()
@@ -198,4 +209,37 @@ $(document).ready(function () {
             lastSubmitUpdate()
         }
     }
+
+    // Time Picker Code
+    $('.pickup-timing').wickedpicker(pickup_option);
+    if (! data.return_time == "None") {
+        let appendHTML = `
+          <label class="txt2" for="return-timing">Return Timing (If required)</label>
+          <input type="text" name="return-timing" id="return-timing" class="return-timing" required />      
+        `
+        $('#return-time-div').append(appendHTML)
+        $('.return-timing').wickedpicker(return_option);
+    }
+
+
+    $(document).on('change', '[name="toggle-return-timing"]', function () {
+        var checkbox = $(this), // Selected or current checkbox
+            value = checkbox.val(); // Value of checkbox
+
+        if (checkbox.is(':checked')) {
+            let appendHTML = `
+          <label class="txt2" for="return-timing">Return Timing (If required)</label>
+          <input type="text" name="return-timing" id="return-timing" class="return-timing" required />      
+        `
+
+            $('#return-time-div').append(appendHTML)
+            var return_option = {
+                now: "00:00:00",
+                title: 'Return Timing Title'
+            };
+            $('.return-timing').wickedpicker(return_option);
+        } else {
+            $('#return-time-div').empty();
+        }
+    });
 });

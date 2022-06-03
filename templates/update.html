@@ -112,7 +112,8 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="client-details-etc" id="client-details-etc" class="w-100" value="{{job.clients_details }}" />
+                    <input type="text" name="client-details-etc" id="client-details-etc" class="w-100"
+                        value="{{job.clients_details }}" />
                 </div>
             </div>
 
@@ -122,14 +123,37 @@
             <label class="txt2" for="pickup-date">Pickup Date <span class="red">*</span></label>
             <input type="date" name="pickup-date" id="pickup-date" value="{{ job.pickup_date }}" required />
         </div>
+
+
+
+        <!-- EDIT THIS PART - START -->
+
+        <!-- NEW CODE -->
         <div class="input-group1">
             <label class="txt2" for="pickup-timing">Pickup Timing <span class="red">*</span></label>
-            <input type="time" name="pickup-timing" id="pickup-timing" value="{{ job.pickup_time }}" required />
+            <input type="text" name="pickup-timing" id="pickup-timing" class="pickup-timing" required />
         </div>
+
         <div class="input-group1">
-            <label class="txt2" for="return-timing">Return Timing (If required)</label>
-            <input type="time" name="return-timing" id="return-timing" value="{{ job.return_time }}" />
+            <label for="time"> Show Return Time </label>
+            {% if job.return_time %}
+            <input type="checkbox" id="check-return-timing" name="toggle-return-timing" value="" checked>
+            {% else %}
+            <input type="checkbox" id="check-return-timing" name="toggle-return-timing" value="">
+            {% endif %}
+
         </div>
+        <div id="return-time-div" class="input-group1">
+            <!-- <label class="txt2" for="return-timing">Return Timing (If required)</label>
+            <input type="text" name="return-timing" id="return-timing" class="return-timing" required /> -->
+            <!-- <input type="time" name="return-timing" id="return-timing" /> -->
+        </div>
+        <!-- NEW CODE -->
+
+        <!-- EDIT THIS PART - START -->
+
+
+
         <div class="input-group1">
             <label class="txt2" for="destination-details">Destination Details (From/To) <span
                     class="red">*</span></label>
@@ -154,11 +178,15 @@
 <!-- https://stackoverflow.com/questions/21626048/unable-to-pass-jinja2-variables-into-javascript-snippet -->
 <meta id="my-data" data-start_date="{{job.start_date}}" data-end_date="{{job.end_date}}"
     data-job_type="{{job.job_type}}" data-meet_and_greet="{{job.meet_greet}}"
-    data-flight_details="{{job.flight_details}}" data-special_requirements="{{job.special_requirements}}">
+    data-flight_details="{{job.flight_details}}" data-special_requirements="{{job.special_requirements}}"
+    data-pickup_time="{{job.pickup_time}}" data-return_time="{{job.return_time}}">
 
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='script-update.js') }}"></script> 
-<script src="{{ url_for('static', filename='script.js') }}"></script> 
+<script src="{{ url_for('static', filename='script-update.js') }}"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<!-- SCRIPTS GOES HERE - UPDATE THE script-update.js too -->
+<script src="{{ url_for('static', filename='wicked-picker.js') }}"></script>
+
 {% endblock %}

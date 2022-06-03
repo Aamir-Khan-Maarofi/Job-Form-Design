@@ -21,7 +21,7 @@ def event_data(s_date, p_time, r_time=None, e_date=None):
     
     if p_period == "PM" and p_hour < 12:
         p_hour = p_hour + 12
-    elif p_period == "PM" and p_hour == 12:
+    elif p_hour == 12 and p_period == "AM": # NOTE : ADDED THE P_PERIOD == AM and P_HOUR == 12 
         p_hour = 00
 
     if p_hour < TIMEZONE_OFFSET:
@@ -49,7 +49,7 @@ def event_data(s_date, p_time, r_time=None, e_date=None):
         
         if r_period == "PM" and r_hour < 12:
             r_hour = r_hour + 12
-        elif r_period == "PM" and r_hour == 12:
+        elif r_period == "AM" and r_hour == 12:
             r_hour = 00
 
         if r_hour < TIMEZONE_OFFSET:
@@ -76,6 +76,7 @@ def event_data(s_date, p_time, r_time=None, e_date=None):
 
 def create_event(job_type, start_date=None, end_date=None, pickup_time=None, return_time=None):
     timezone = TIMEZONE
+    print("CREATING EVENT >>>>>>>>>>>>>>>>>>>>>>>>>")
     if job_type and job_type == "NORMAL_JOB":
         # If the current job has only start time then create one event for two hours starting at start time
         if pickup_time and not return_time:
@@ -166,6 +167,8 @@ def create_event(job_type, start_date=None, end_date=None, pickup_time=None, ret
             }
         
     if job_type and job_type == "DAILY_JOB":
+        print("DAILY JOB >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(job_type)
         # if the current job has only start time then create one event for all dates (start - end dates both inclusive) each two hours long
         if pickup_time and not return_time:
             data = event_data(start_date, pickup_time, e_date=end_date)
@@ -337,7 +340,7 @@ def delete_events(job_type, event_ids):
 if __name__ == "__main__":
     # create_event("NORMAL_JOB", start_date="2022-05-24", pickup_time='01 : 30 AM')
     # create_event("NORMAL_JOB", start_date="2022-05-22", pickup_time='10 : 30 AM', return_time='10 : 30 PM')
-    # create_event("DAILY_JOB", start_date = "2022-05-24", end_date='2022-05-30', pickup_time='11 : 30 PM')
+    create_event("DAILY_JOB", start_date = "2022-06-05", end_date='2022-06-10', pickup_time='12 : 00 PM')
     # create_event("DAILY_JOB", start_date = "2022-05-04", end_date="2022-05-15", pickup_time='10 : 30 AM', return_time='10 : 30 PM')
 
     # event_ids = {

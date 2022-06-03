@@ -16,14 +16,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Create object based on provided data
 def create_job_object(current_job, job_type, event_ids, flag='create'):
     data = dict()
-    if len(event_ids) == 2:
-        data['pickup_event_id'] = event_ids['pickup_event_id']
-        data['return_event_id'] = event_ids['return_event_id']
-    else:
-        data['pickup_event_id'] = event_ids['pickup_event_id']
-        data['return_event_id'] = None
+    if event_ids:
+        if len(event_ids) == 2:
+            data['pickup_event_id'] = event_ids['pickup_event_id']
+            data['return_event_id'] = event_ids['return_event_id']
+        else:
+            data['pickup_event_id'] = event_ids['pickup_event_id']
+            data['return_event_id'] = None
 
-    if job_type == "DAILY_JOBS":
+    if job_type == "DAILY_JOB":
         print("[INFO: IT'S A DAILY TRIP]")
 
         data['company'] = current_job['company']
@@ -34,18 +35,11 @@ def create_job_object(current_job, job_type, event_ids, flag='create'):
         data['clients_details'] = current_job['client-details-etc']
         data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
 
-        # try:
-        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M").time()
-        # except:
-        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M:%S").time()
-        
         data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
-        data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
-
-        # try:
-        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M").time()
-        # except:
-        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M:%S").time()
+        if 'return-timing' in current_job.keys():
+            data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
+        else:
+            data['return_time'] = None
 
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
@@ -67,18 +61,11 @@ def create_job_object(current_job, job_type, event_ids, flag='create'):
         data['clients_details'] = current_job['client-details-etc']
         data['pickup_date'] = datetime.strptime(current_job['pickup-date'], "%Y-%m-%d")
 
-        # try:
-        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M").time()
-        # except:
-        #     data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%H:%M:%S").time()
-        
         data['pickup_time'] = datetime.strptime(current_job['pickup-timing'], "%I : %M %p").time()
-        data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
-
-        # try:
-        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M").time()
-        # except:
-        #     data['return_time'] = datetime.strptime(current_job['return-timing'], "%H:%M:%S").time()
+        if 'return-timing' in current_job.keys():
+            data['return_time'] = datetime.strptime(current_job['return-timing'], "%I : %M %p").time()
+        else:
+            data['return_time'] = None
 
         data['destination'] = current_job['destination-details']
         data['notes'] = current_job['note']
@@ -123,11 +110,12 @@ def create():
         return render_template('create.html')
     elif request.method == "POST":
         current_job = dict(request.form)
-        job_type = "DAILY_JOBS" if current_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
+        pprint(current_job)
+        job_type = "DAILY_JOB" if current_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
         if job_type == "NORMAL_JOB":
             # create one event
-            if current_job['return-timing']:
+            if 'return-timing' in current_job.keys():
                 event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['pickup-date'], 
@@ -143,7 +131,8 @@ def create():
             
         else:
             # create multiple events
-            if current_job['return-timing']:
+            print("DAILY JOB .......................")
+            if 'return-timing' in current_job.keys():
                 event_ids = create_event(
                     job_type=job_type, 
                     start_date=current_job['start-date'], 
@@ -190,16 +179,15 @@ def search_jobs(company=None):
 def update(id=None):
     if request.method == "GET":
         job = db.session.query(JobsModel).filter(JobsModel.id == id).first()
-        print(job.priority)
+        print(job)
         return render_template('update.html', job=job)
     elif request.method == "POST":
         edit_job = dict(request.form)
         job = db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).first()
-        job_type = "DAILY_JOBS" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
+        job_type = "DAILY_JOB" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
-        data = create_job_object(edit_job, job_type, 'update')
-        db.session.query(JobsModel).filter(
-            JobsModel.id == edit_job['id']).update(data)
+        data = create_job_object(edit_job, job_type, None, 'update')
+        db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
         db.session.commit()
 
         if job_type == "NORMAL_JOB":

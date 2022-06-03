@@ -6,7 +6,7 @@
 
 <form method="POST" action="{{ url_for('create') }}" class="form" id="body-fromx">
     <h1 class="text-center">Job Request Form</h1>
-    
+
     <div id="body-from">
         <div class="input-group1">
             <label class="txt2" for="company">Your Company Name <span class="red">*</span></label>
@@ -79,12 +79,17 @@
         </div>
         <div class="input-group1">
             <label class="txt2" for="pickup-timing">Pickup Timing <span class="red">*</span></label>
-            <input type="text" name="pickup-timing" id="pickup-timing" class="pickup-timing" required/>
+            <input type="text" name="pickup-timing" id="pickup-timing" class="pickup-timing" required />
             <!-- <input type="time" name="pickup-timing" id="pickup-timing" required /> -->
         </div>
+
         <div class="input-group1">
-            <label class="txt2" for="return-timing">Return Timing (If required)</label>
-            <input type="text" name="return-timing" id="return-timing" class="return-timing" required/>
+            <label for="time"> Show Return Time </label>
+            <input type="checkbox" id="check-return-timing" name="toggle-return-timing" value="">
+        </div>
+        <div id="return-time-div" class="input-group1">
+            <!-- <label class="txt2" for="return-timing">Return Timing (If required)</label>
+            <input type="text" name="return-timing" id="return-timing" class="return-timing" required /> -->
             <!-- <input type="time" name="return-timing" id="return-timing" /> -->
         </div>
         <div class="input-group1">
@@ -119,19 +124,4 @@
 <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="{{ url_for('static', filename='wicked-picker.js') }}"></script>
-<script>
-    var options1 = {
-        now: "01:01:01",
-        title: 'Pickup Timing Title'
-    };
-
-    var options2 = {
-        now: "02:02:02",
-        title: 'Return Timing Title'
-    };
-
-    $('.pickup-timing').wickedpicker(options1);
-
-    $('.return-timing').wickedpicker(options2);
-</script>
 {% endblock %}
