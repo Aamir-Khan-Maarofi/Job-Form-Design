@@ -1,7 +1,6 @@
 import logging as logger
 from datetime import datetime
 from pprint import pprint
-from google_calendar import create_event, delete_events, edit_events, event_data
 from models import db, JobsModel
 from flask import Flask, redirect, render_template, request
 logger.basicConfig(level="DEBUG")
@@ -246,7 +245,7 @@ def update(id=None):
             "pickup_event_id" : None,
             "return_event_id" : None
         }
-        
+
         data = create_job_object(edit_job, job_type, updated_event_ids, 'update')
         db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
         db.session.commit()
