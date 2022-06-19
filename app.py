@@ -121,40 +121,45 @@ def create():
         pprint(current_job)
         job_type = "DAILY_JOB" if current_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
-        if job_type == "NORMAL_JOB":
-            # create one event
-            if 'return-timing' in current_job.keys():
-                event_ids = create_event(
-                    job_type=job_type,
-                    start_date=current_job['pickup-date'],
-                    pickup_time=current_job['pickup-timing'],
-                    return_time=current_job['return-timing'],
-                )
-            else:
-                event_ids = create_event(
-                    job_type=job_type,
-                    start_date=current_job['pickup-date'],
-                    pickup_time=current_job['pickup-timing'],
-                )
+        # if job_type == "NORMAL_JOB":
+        #     # create one event
+        #     if 'return-timing' in current_job.keys():
+        #         event_ids = create_event(
+        #             job_type=job_type,
+        #             start_date=current_job['pickup-date'],
+        #             pickup_time=current_job['pickup-timing'],
+        #             return_time=current_job['return-timing'],
+        #         )
+        #     else:
+        #         event_ids = create_event(
+        #             job_type=job_type,
+        #             start_date=current_job['pickup-date'],
+        #             pickup_time=current_job['pickup-timing'],
+        #         )
 
-        else:
-            # create multiple events
-            print("DAILY JOB .......................")
-            if 'return-timing' in current_job.keys():
-                event_ids = create_event(
-                    job_type=job_type,
-                    start_date=current_job['start-date'],
-                    end_date=current_job['end-date'],
-                    pickup_time=current_job['pickup-timing'],
-                    return_time=current_job['return-timing'],
-                )
-            else:
-                event_ids = create_event(
-                    job_type=job_type,
-                    start_date=current_job['start-date'],
-                    end_date=current_job['end-date'],
-                    pickup_time=current_job['pickup-timing'],
-                )
+        # else:
+        #     # create multiple events
+        #     print("DAILY JOB .......................")
+        #     if 'return-timing' in current_job.keys():
+        #         event_ids = create_event(
+        #             job_type=job_type,
+        #             start_date=current_job['start-date'],
+        #             end_date=current_job['end-date'],
+        #             pickup_time=current_job['pickup-timing'],
+        #             return_time=current_job['return-timing'],
+        #         )
+        #     else:
+        #         event_ids = create_event(
+        #             job_type=job_type,
+        #             start_date=current_job['start-date'],
+        #             end_date=current_job['end-date'],
+        #             pickup_time=current_job['pickup-timing'],
+        #         )
+
+        event_ids = {
+            "pickup_event_id" : None,
+            "return_event_id" : None
+        }
 
         data = create_job_object(current_job, job_type, event_ids)
         job = JobsModel(data=data)
@@ -191,56 +196,59 @@ def update(id=None):
         return render_template('update.html', job=job)
     elif request.method == "POST":
         edit_job = dict(request.form)
-        job = db.session.query(JobsModel).filter(
-            JobsModel.id == edit_job['id']).first()
+        job = db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).first()
         job_type = "DAILY_JOB" if edit_job['type-of-trip'] == "daily-trips" else "NORMAL_JOB"
 
-        event_ids = {
-            "pickup_event_id": job.pickup_event_id,
-            "return_event_id": job.return_event_id
+        # event_ids = {
+        #     "pickup_event_id": job.pickup_event_id,
+        #     "return_event_id": job.return_event_id
+        # }
+
+
+        # if job_type == "NORMAL_JOB":
+        #     # update one event
+        #     if 'return-timing' in edit_job.keys():
+        #         updated_event_ids = edit_events(
+        #             job_type=job_type,
+        #             event_ids=event_ids,
+        #             start_date=edit_job['pickup-date'],
+        #             pickup_time=edit_job['pickup-timing'],
+        #             return_time=edit_job['return-timing'],
+        #         )
+        #     else:
+        #         updated_event_ids = edit_events(
+        #             job_type=job_type,
+        #             event_ids=event_ids,
+        #             start_date=edit_job['pickup-date'],
+        #             pickup_time=edit_job['pickup-timing'],
+        #         )
+        # else:
+        #     # update multiple events
+        #     if 'return-timing' in edit_job.keys():
+        #         updated_event_ids = edit_events(
+        #             job_type=job_type,
+        #             event_ids=event_ids,
+        #             start_date=edit_job['start-date'],
+        #             end_date=edit_job['end-date'],
+        #             pickup_time=edit_job['pickup-timing'],
+        #             return_time=edit_job['return-timing'],
+        #         )
+        #     else:
+        #         updated_event_ids = edit_events(
+        #             job_type=job_type,
+        #             event_ids=event_ids,
+        #             start_date=edit_job['start-date'],
+        #             end_date=edit_job['end-date'],
+        #             pickup_time=edit_job['pickup-timing'],
+        #         )
+
+        updated_event_ids = {
+            "pickup_event_id" : None,
+            "return_event_id" : None
         }
-
-        if job_type == "NORMAL_JOB":
-            # update one event
-            if 'return-timing' in edit_job.keys():
-                updated_event_ids = edit_events(
-                    job_type=job_type,
-                    event_ids=event_ids,
-                    start_date=edit_job['pickup-date'],
-                    pickup_time=edit_job['pickup-timing'],
-                    return_time=edit_job['return-timing'],
-                )
-            else:
-                updated_event_ids = edit_events(
-                    job_type=job_type,
-                    event_ids=event_ids,
-                    start_date=edit_job['pickup-date'],
-                    pickup_time=edit_job['pickup-timing'],
-                )
-        else:
-            # update multiple events
-            if 'return-timing' in edit_job.keys():
-                updated_event_ids = edit_events(
-                    job_type=job_type,
-                    event_ids=event_ids,
-                    start_date=edit_job['start-date'],
-                    end_date=edit_job['end-date'],
-                    pickup_time=edit_job['pickup-timing'],
-                    return_time=edit_job['return-timing'],
-                )
-            else:
-                updated_event_ids = edit_events(
-                    job_type=job_type,
-                    event_ids=event_ids,
-                    start_date=edit_job['start-date'],
-                    end_date=edit_job['end-date'],
-                    pickup_time=edit_job['pickup-timing'],
-                )
-
-        data = create_job_object(
-            edit_job, job_type, updated_event_ids, 'update')
-        db.session.query(JobsModel).filter(
-            JobsModel.id == edit_job['id']).update(data)
+        
+        data = create_job_object(edit_job, job_type, updated_event_ids, 'update')
+        db.session.query(JobsModel).filter(JobsModel.id == edit_job['id']).update(data)
         db.session.commit()
 
         # If job is immediate send whatsapp invite.
@@ -257,11 +265,12 @@ def delete(id=None):
         try:
             job = db.session.query(JobsModel).filter(
                 JobsModel.id == id).first()
-            event_ids = {
-                "pickup_event_id": job.pickup_event_id,
-                "return_event_id": job.return_event_id
-            }
-            delete_events(event_ids=event_ids)
+            # event_ids = {
+            #     "pickup_event_id": job.pickup_event_id,
+            #     "return_event_id": job.return_event_id
+            # }
+
+            # delete_events(event_ids=event_ids)
             db.session.query(JobsModel).filter(JobsModel.id == id).delete()
             db.session.commit()
 
