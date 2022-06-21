@@ -7,35 +7,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Trocchi&display=swap" rel="stylesheet">
 
-    <title> {% block title %} {% endblock %} </title>
+<title> {% block title %} {% endblock %} </title>
 </head>
 
 <body>
+   <!--top header-->
+   <header >
+    <!--most top info -->
+    <div style="height: 0px; background: #f2f9ee"></div>
+    <!-- End most top info -->
 
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+    <nav class="navbar  navbar-expand-lg navbar-light top-navbar" data-toggle="sticky-onscroll">
+        <div class="container">
+            <a class="navbar-brand" href="./">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logoSize">    
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav pull-center pull-md-right">
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/create">Create New Job</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/create">Create Job</a>
+                        <a class="nav-link" href="/search-jobs">Exiting Job By Company</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/search-jobs">List Jobs</a>
-                    </li>
+            
                 </ul>
+
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
+
+</header>
+
     <br><br>
-    {% block body %} {% endblock %}
+    <div class="containerx">
+        {% block body %} {% endblock %}
+    </div>
+  
 
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
 {% block script %} {% endblock %}
 
 </html>

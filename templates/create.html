@@ -5,27 +5,27 @@
 {% block body %}
 
 <form method="POST" action="{{ url_for('create') }}" class="form" id="body-fromx">
-    <h1 class="text-center">Job Request Form</h1>
+    <h1 class="text-center">New Job Registration</h1>
 
     <div id="body-from">
         <div class="input-group1">
             <label class="txt2" for="company">Your Company Name <span class="red">*</span></label>
             <p>This field will later be used for filtering scheduled jobs (plese fill it carefully)</p>
-            <input type="text" name="company" id="company" required />
+            <input type="text" class="input100" name="company" id="company" required />
         </div>
         <div class="input-group1">
             <label class="txt2" for="Name">Name <span class="red">*</span></label>
-            <input type="text" name="name" id="name" required />
+            <input type="text"  class="input100" name="name" id="name" required />
         </div>
         <div class="input-group1">
             <label class="txt2" for="billing-details">Billing details (Company/ Vessel Name) <span
                     class="red">*</span></label>
-            <input type="text" name="billing-details" id="billing-details" required />
+            <input type="text"  class="input100" name="billing-details" id="billing-details" required />
         </div>
 
         <div class="input-group1">
             <label class="txt2" for="username">Job Priority</label>
-            <select name="job-priority" id="job-priority">
+            <select name="job-priority" id="job-priority"  class="input100">
                 <option value="Normal">Normal (Trips before 24 Hrs)</option>
                 <option value="Important">Important (Trips before 12 Hrs )</option>
                 <option value="Immediate">Immediate (Trips before 6 Hrs)</option>
@@ -42,7 +42,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check pl-01">
-                            <input class="form-check-input" type="radio" name="type-of-trip" value="normal-trip"
+                            <input class="form-check-input" type="radio"  class="input100" name="type-of-trip" value="normal-trip"
                                 id="normal-trip" />
                             <p-label class="form-check-label" for="normal-trip"> Normal Trip</p-label>
                         </div>
@@ -67,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="client-details-etc" id="client-details-etc" class="w-100" />
+                    <input type="text" name="client-details-etc"  class="input100" id="client-details-etc" class="w-100 input100" />
                 </div>
             </div>
 
@@ -75,11 +75,11 @@
         </div>
         <div class="input-group1">
             <label class="txt2" for="pickup-date">Pickup Date <span class="red">*</span></label>
-            <input type="date" name="pickup-date" id="pickup-date" required />
+            <input type="date" name="pickup-date"  class="input100" id="pickup-date" required />
         </div>
         <div class="input-group1">
             <label class="txt2" for="pickup-timing">Pickup Timing <span class="red">*</span></label>
-            <input type="text" name="pickup-timing" id="pickup-timing" class="pickup-timing" required />
+            <input type="text" name="pickup-timing"   id="pickup-timing" class="pickup-timing input100" required />
             <!-- <input type="time" name="pickup-timing" id="pickup-timing" required /> -->
         </div>
 
@@ -95,7 +95,7 @@
         <div class="input-group1">
             <label class="txt2" for="destination-details">Destination Details (From/To) <span
                     class="red">*</span></label>
-            <input type="text" name="destination-details" id="destination-details" required />
+            <input type="text" name="destination-details"  class="input100" id="destination-details" required />
         </div>
         <div class="input-group1">
             <div class="row">
@@ -105,7 +105,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="note" id="note" />
+                    <input type="text" name="note"  class="input100" id="note" />
                 </div>
             </div>
 
