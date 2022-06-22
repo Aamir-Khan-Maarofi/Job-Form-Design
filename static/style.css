@@ -419,9 +419,14 @@ nav {
   box-shadow: 0px 7px 27px 16px rgb(236 232 247 / 76%);
 -webkit-box-shadow: 0px 7px 27px 16px rgb(236 232 247 / 76%);
 -moz-box-shadow: 0px 7px 27px 16px rgb(236 232 247 / 76%);
-height: 410px;
-width: 300px;
+  width: 270px;
+
 }
+.cardBody{
+  height: 430px;
+
+}
+
 
 /* CSS */
 .btn-next ,.btn2 {
@@ -483,7 +488,6 @@ width: 300px;
   padding: 10px 10px;
 }
 .card-box{
-height: 410px;
-width: 100% !important;
+  width: 100% !important;
 }
 }

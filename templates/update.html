@@ -11,22 +11,22 @@
             <input type="hidden" name="id" value="{{ job.id }}">
             <label class="txt2" for="company">Your Company Name <span class="red">*</span></label>
             <p>This field will later be used for filtering scheduled jobs (plese fill it carefully)</p>
-            <input type="text" name="company" id="company" value="{{ job.company }}" required />
+            <input type="text" name="company" class="input100" id="company" value="{{ job.company }}" required />
         </div>
         <div class="input-group1">
             <label class="txt2" for="Name">Name <span class="red">*</span></label>
-            <input type="text" name="name" id="name" value="{{ job.name }}" required />
+            <input type="text" name="name" class="input100" id="name" value="{{ job.name }}" required />
         </div>
         <div class="input-group1">
             <label class="txt2" for="billing-details">Billing details (Company/ Vessel Name) <span
                     class="red">*</span></label>
-            <input type="text" name="billing-details" id="billing-details" value="{{ job.billing_details }}" required />
+            <input type="text" name="billing-details" class="input100" id="billing-details" value="{{ job.billing_details }}" required />
         </div>
 
         <div class="input-group1">
             <label class="txt2" for="username">Job Priority</label>
 
-            <select name="job-priority" id="job-priority">
+            <select name="job-priority" id="job-priority" class="input100">
                 {% if job.priority == 'Normal' %}
 
                 <option value="Normal" selected="selected">Normal (Trips before 24 Hrs)</option>
@@ -112,7 +112,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="client-details-etc" id="client-details-etc" class="w-100"
+                    <input type="text" name="client-details-etc"  id="client-details-etc" class="w-100 input100"
                         value="{{job.clients_details }}" />
                 </div>
             </div>
@@ -121,7 +121,7 @@
         </div>
         <div class="input-group1">
             <label class="txt2" for="pickup-date">Pickup Date <span class="red">*</span></label>
-            <input type="date" name="pickup-date" id="pickup-date" value="{{ job.pickup_date }}" required />
+            <input type="date" name="pickup-date" class="input100" id="pickup-date" value="{{ job.pickup_date }}" required />
         </div>
 
 
@@ -131,15 +131,15 @@
         <!-- NEW CODE -->
         <div class="input-group1">
             <label class="txt2" for="pickup-timing">Pickup Timing <span class="red">*</span></label>
-            <input type="text" name="pickup-timing" id="pickup-timing" class="pickup-timing input100" required />
+            <input type="text" name="pickup-timing"  id="pickup-timing" class="pickup-timing input100" required />
         </div>
 
         <div class="input-group1">
             <label for="time"> Show Return Time </label>
             {% if job.return_time %}
-            <input type="checkbox" id="check-return-timing" name="toggle-return-timing" value="" checked>
+            <input type="checkbox" id="check-return-timing" class="input100" name="toggle-return-timing" value="" checked>
             {% else %}
-            <input type="checkbox" id="check-return-timing" name="toggle-return-timing" value="">
+            <input type="checkbox" id="check-return-timing" class="input100" name="toggle-return-timing" value="">
             {% endif %}
 
         </div>
@@ -157,18 +157,18 @@
         <div class="input-group1">
             <label class="txt2" for="destination-details">Destination Details (From/To) <span
                     class="red">*</span></label>
-            <input type="text" name="destination-details" id="destination-details" value="{{ job.destination }}"
+            <input type="text" name="destination-details" class="input100" id="destination-details" value="{{ job.destination }}"
                 required />
         </div>
         <div class="input-group1">
             <div class="row">
                 <div class="col-12">
-                    <label class="txt2" class="d-block" for="note">Note <label class="txt2">
+                    <label  class="txt2 d-block" for="note">Note </label>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="note" id="note" value="{{ job.notes }}" />
+                    <input type="text" name="note" id="note" class="input100" value="{{ job.notes }}" />
                 </div>
             </div>
         </div>

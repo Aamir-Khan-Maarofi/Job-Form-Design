@@ -69,7 +69,7 @@ $(document).on('change', '[name="toggle-return-timing"]', function () {
     let appendHTML =
       `
         <label class="txt2" for="return-timing">Return Timing (If required)</label>
-        <input type="text" name="return-timing" id="return-timing" class="return-timing" required />      
+        <input type="text" name="return-timing" id="return-timing" class="return-timing input100" required />      
       `
 
     $('#return-time-div').append(appendHTML)
